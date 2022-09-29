@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin')
 const cesiumBuild = './node_modules/cesium/Build/Cesium'
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -18,6 +19,11 @@ module.exports = defineConfig({
           { from: path.join(cesiumBuild, 'Workers'), to: 'lib/cesium/Workers' },
           { from: path.join(cesiumBuild, 'Cesium.js'), to: 'lib/cesium/Cesium.js' }
         ]
+      }),
+      new HtmlWebpackTagsPlugin({
+        append: false,
+        links: ['lib/cesium/Widgets/widgets.css'],
+        scripts: ['lib/cesium/Cesium.js']
       }),
       new webpack.DefinePlugin({
         CESIUM_BASE_URL: JSON.stringify('./lib/cesium')
