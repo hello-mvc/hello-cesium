@@ -1,9 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
-const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin')
-const cesiumBuild = './node_modules/cesium/Build/Cesium'
+const cesiumBuild = 'node_modules/cesium/Build/Cesium'
+const cesiumLib = 'lib/cesium'
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
@@ -13,20 +13,16 @@ module.exports = defineConfig({
     plugins: [
       new CopyWebpackPlugin({
         patterns: [
-          { from: path.join(cesiumBuild, 'Assets'), to: 'lib/cesium/Assets' },
-          { from: path.join(cesiumBuild, 'ThirdParty'), to: 'lib/cesium/ThirdParty' },
-          { from: path.join(cesiumBuild, 'Widgets'), to: 'lib/cesium/Widgets' },
-          { from: path.join(cesiumBuild, 'Workers'), to: 'lib/cesium/Workers' },
-          { from: path.join(cesiumBuild, 'Cesium.js'), to: 'lib/cesium/Cesium.js' }
+          { from: cesiumBuild, to: cesiumLib },
         ]
       }),
       new HtmlWebpackTagsPlugin({
         append: false,
-        links: ['lib/cesium/Widgets/widgets.css'],
-        scripts: ['lib/cesium/Cesium.js']
+        links: [`${cesiumLib}/Widgets/widgets.css`],
+        scripts: [`${cesiumLib}/Cesium.js`]
       }),
       new webpack.DefinePlugin({
-        CESIUM_BASE_URL: JSON.stringify('./lib/cesium')
+        CESIUM_BASE_URL: JSON.stringify(`./${cesiumLib}`)
       })
     ]
   }
